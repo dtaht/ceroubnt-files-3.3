@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ipt() {
+iptables $*
+ip6tables $*
+}
+
+ipt -A POSTROUTING -t mangle -p udp -m multiport --ports 53,123,161,162 -m dscp --dscp-class CS0 -j DSCP --set-dscp-class CS5
+ipt -A POSTROUTING -t mangle -p tcp -m multiport --ports 53,81 -m dscp --dscp-class CS0 -j DSCP --set-dscp-class CS5
+ipt -A OUTPUT -t mangle -p tcp -m multiport --ports 22 -m dscp --dscp-class CS0 -j DSCP --set-dscp-class CS4
+
